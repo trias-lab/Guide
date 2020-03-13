@@ -107,6 +107,7 @@ func main() {
 	fmt.Println(KeyValueList(reqFunc4, reqMethod4, params4))
 	// {"code": 0, "message": "Success"}
 
+	//key set
 	ketSetParams := map[string]interface{}{"data": "66666", "ttype": "2"}
 	fmt.Println(KetSet(ketSetParams))
 	// {"code": 0, "message": "Success"}

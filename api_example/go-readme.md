@@ -72,6 +72,27 @@ fmt.Println(KeyValueList(reqFunc, reqMethod, params))
 }
 ```
 
+
+#### key:value 交易
+
+新版本的api接口：交易会根据参数选择来写入到bdb/trias/mysql等，写入顺序也由参数决定
+```go
+// 准备参数
+ketSetParams := map[string]interface{}{"data": "66666", "ttype": "2"}
+// 进行请求
+fmt.Println(KetSet(ketSetParams))
+```
+```json
+{
+    "ref": 1584099119949948000,
+    "result": {
+        "dbId": "86",
+        "hash": "YWNjYzQxOGYyM2Q1YjkyMjY0MjA5ZTlmNmRkOTZhZWQwNjhiZmQ3YmJiMWQ4YWUyMzdhY2U1Njg3OTcwZmRiNA=="
+    }
+}
+```
+
+
 #### 查看当前块高
 ```go
 fmt.Println(BlockCount())
