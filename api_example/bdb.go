@@ -9,6 +9,7 @@ import (
 )
 
 const BaseUrl = "http://49.233.195.152:3456"
+const TriasKitUrl = "http://192.168.x.x:8088/trias/api/"
 
 func KeyValueList(reqFunc string, reqMethod string, params map[string]interface{}) (result string) {
 	// key value or list 交易
@@ -21,7 +22,7 @@ func KeyValueList(reqFunc string, reqMethod string, params map[string]interface{
 	if reqMethod == "POST" {
 		jsonStr, _ := json.Marshal(params)
 		resp, _ := http.Post(baseUrl, "application/json", bytes.NewBuffer(jsonStr))
-		body, _ := ioutil.ReadAll(resp.Body)  // body2数据类型 []uint8
+		body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
 		return string(body)
 	} else {
 		reqUrl := baseUrl + "?key=" + params["key"].(string)
@@ -29,6 +30,15 @@ func KeyValueList(reqFunc string, reqMethod string, params map[string]interface{
 		body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
 		return string(body)
 	}
+}
+
+func KetSet(params map[string]interface{}) (result string) {
+	// return:
+	reqUrl := TriasKitUrl + "web/keySet"
+	jsonStr, _ := json.Marshal(params)
+	resp, _ := http.Post(reqUrl, "application/json", bytes.NewBuffer(jsonStr))
+	body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
+	return string(body)
 }
 
 func BlockCount() (result string) {
@@ -95,6 +105,10 @@ func main() {
 	reqMethod4 := "POST"
 	params4 := map[string]interface{}{"key": "66666", "value": "66666"}
 	fmt.Println(KeyValueList(reqFunc4, reqMethod4, params4))
+	// {"code": 0, "message": "Success"}
+
+	ketSetParams := map[string]interface{}{"data": "66666", "ttype": "2"}
+	fmt.Println(KetSet(ketSetParams))
 	// {"code": 0, "message": "Success"}
 
 	// block count
