@@ -82,6 +82,22 @@ ketSetParams := map[string]interface{}{"data": "66666", "ttype": "2"}
 // 进行请求
 fmt.Println(KetSet(ketSetParams))
 ```
+参数：
+
+data:
+    上链数据
+
+ttype:交易模式：
+
+    1，先写到DB，异步写入链；
+
+    2，写入到DB，并且写入链，但是不等共识成功；
+
+    3，写入到DB，并且上链共识完成，
+
+    4，写入消息中间件即可
+    
+返回
 ```json
 {
     "ref": 1584099119949948000,
