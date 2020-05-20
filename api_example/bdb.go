@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-const BaseUrl = "http://49.233.195.152:3456"
-const TriasKitUrl = "http://192.168.x.x:8088/trias/api/"
+const BaseUrl = "http://49.233.195.152:3456"             //testnet ip and port address, if it can't connect,please cotract with us, there are changed
+const TriasKitUrl = "http://192.168.x.x:8088/trias/api/" //test zhe trias kit address
 
 func checkErr(err error) {
 	//check the err info
@@ -107,16 +107,6 @@ func DataSize() (result string) {
 	resp, _ := http.Get(reqUrl)
 	body, _ := ioutil.ReadAll(resp.Body)
 	return string(body)
-}
-
-//catch the error when run funciton
-func GetError() {
-	defer func() {
-		//判断是否出现错误
-		if err := recover(); err != nil {
-			fmt.Println(err) //防止程序崩溃
-		}
-	}() //()一定要加上，调用此匿名函数
 }
 
 func main() {
