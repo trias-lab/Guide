@@ -58,7 +58,8 @@ class BDB_API(object):
 
 
 if __name__ == '__main__':
-    bdb_api = BDB_API("http://49.233.195.152:3456")
+    bdb_api = BDB_API("http://49.233.195.152:3456")#测试网IP地址和接口，可能随时变化，如果发现不通，请联系团队
+
 
     # 发起 key value 交易
     params = {"key": "2020-02-12", "value": "1111"}

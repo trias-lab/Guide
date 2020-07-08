@@ -8,8 +8,15 @@ import (
 	"net/http"
 )
 
-const BaseUrl = "http://49.233.195.152:3456"
-const TriasKitUrl = "http://192.168.x.x:8088/trias/api/"
+const BaseUrl = "http://49.233.195.152:3456"             //testnet ip and port address, if it can't connect,please cotract with us, there are changed
+const TriasKitUrl = "http://192.168.x.x:8088/trias/api/" //test zhe trias kit address
+
+func checkErr(err error) {
+	//check the err info
+	if err != nil {
+		error.Error(err)
+	}
+}
 
 func KeyValueList(reqFunc string, reqMethod string, params map[string]interface{}) (result string) {
 	// key value or list 交易
@@ -22,13 +29,26 @@ func KeyValueList(reqFunc string, reqMethod string, params map[string]interface{
 	if reqMethod == "POST" {
 		jsonStr, _ := json.Marshal(params)
 		resp, _ := http.Post(baseUrl, "application/json", bytes.NewBuffer(jsonStr))
-		body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
-		return string(body)
+
+		if resp != nil && resp.Body != nil {
+			body, err := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
+			checkErr(err)
+			return string(body)
+		} else {
+			fmt.Println("there is nothing work from " + baseUrl)
+			return ""
+		}
 	} else {
 		reqUrl := baseUrl + "?key=" + params["key"].(string)
 		resp, _ := http.Get(reqUrl)
-		body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
-		return string(body)
+		if resp != nil && resp.Body != nil {
+			body, err := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
+			checkErr(err)
+			return string(body)
+		} else {
+			fmt.Println("there is nothing work from " + baseUrl)
+			return ""
+		}
 	}
 }
 
@@ -36,9 +56,17 @@ func KetSet(params map[string]interface{}) (result string) {
 	// return:
 	reqUrl := TriasKitUrl + "web/keySet"
 	jsonStr, _ := json.Marshal(params)
-	resp, _ := http.Post(reqUrl, "application/json", bytes.NewBuffer(jsonStr))
-	body, _ := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
-	return string(body)
+	resp, err := http.Post(reqUrl, "application/json", bytes.NewBuffer(jsonStr))
+	checkErr(err)
+	if resp != nil {
+		fmt.Print(resp.Body)
+		body, err := ioutil.ReadAll(resp.Body) // body2数据类型 []uint8
+		checkErr(err)
+		return string(body)
+	} else {
+		fmt.Println("set value nothing :", reqUrl)
+	}
+	return ""
 }
 
 func BlockCount() (result string) {
@@ -46,8 +74,12 @@ func BlockCount() (result string) {
 	// return:
 	reqUrl := BaseUrl + "/api/v1/block_count/"
 	resp, _ := http.Get(reqUrl)
-	body, _ := ioutil.ReadAll(resp.Body)
-	return string(body)
+	if resp != nil && resp.Body != nil {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return string(body)
+	} else {
+		return ""
+	}
 }
 
 func TransactionCount() (result string) {
@@ -79,24 +111,31 @@ func DataSize() (result string) {
 
 func main() {
 
+	defer func() {
+		//check the run error info
+		if err := recover(); err != nil {
+			fmt.Println("there are some wrong ,please check it: ", err)
+		}
+	}()
+
 	// get list
 	reqFunc := "list"
 	reqMethod := "GET"
-	params := map[string]interface{}{"key": "99999"}
+	params := map[string]interface{}{"key": "99999"} //get the key 99999 by list
 	fmt.Println(KeyValueList(reqFunc, reqMethod, params))
 	// {"code": 0, "data": {"key": "99999", "list": ["99999"]}, "message": "Success"}
 
 	// get value
 	reqFunc2 := "value"
 	reqMethod2 := "GET"
-	params2 := map[string]interface{}{"key": "66666"}
+	params2 := map[string]interface{}{"key": "66666"} //get the key 66666 by value
 	fmt.Println(KeyValueList(reqFunc2, reqMethod2, params2))
 	// {"code": 0, "data": {"key": "66666", "value": "66666"}, "message": "Success"}
 
 	// post list
 	reqFunc3 := "list"
 	reqMethod3 := "POST"
-	params3 := map[string]interface{}{"key": "99999", "value": "99999"}
+	params3 := map[string]interface{}{"key": "99999", "value": "99999"} //post the number by list, the key is 99999 value is 99999 in list
 	fmt.Println(KeyValueList(reqFunc3, reqMethod3, params3))
 	// {"code": 0, "message": "Success"}
 
@@ -126,5 +165,6 @@ func main() {
 
 	// data size
 	fmt.Println(DataSize())
+	fmt.Println("finsh test go sdk...............")
 	// {"code": 0, "size": 4442822.0, "message": "success"}
 }
