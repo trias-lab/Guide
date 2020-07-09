@@ -473,14 +473,30 @@ ttype:交易模式：
 
 ```json
 {
-    "msg": "success",
-    "code": 0
+    "ref": 1594262035967140000,
+    "result": {
+        "dbId": "30",
+        "errors": [
+            {
+                "code": 3,
+                "detail": "call bdb error"
+            },
+            {
+                "code": 3,
+                "detail": "call tm error"
+            },
+            {
+                "code": 3,
+                "detail": "call fabric error"
+            }
+        ]
+    }
 }
 ```
 
-- code说明
+- ref说明
+时间戳
 
-|number|meaning|suggestion|
-|------|------|------|
-|0|成功||
-|-3|失败 如服务出现异常等|1分钟后重试|
+- errors说明
+分别存储到服务的错误信息
+
